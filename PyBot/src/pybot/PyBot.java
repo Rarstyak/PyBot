@@ -5,17 +5,30 @@
  */
 package pybot;
 
+import javax.security.auth.login.LoginException;
+
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
+
 /**
  *
  * @author BNC
  */
 public class PyBot {
 
-    /**
-     * @param args the command line arguments
-     */
+    public static JDA jda;
+    
+    public static final String BOT_TOKEN = "MzE4ODg5MjYxNDgxMDY2NTA2.DA5JHQ.tYjFz_YPRipDmM2LuRCuoGeolBc";
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        try{
+            jda = new JDABuilder(AccountType.BOT).addEventListener(new BotListener()).setToken(BOT_TOKEN).buildBlocking();
+        } catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {
+            e.printStackTrace();
+        }
     }
     
 }
