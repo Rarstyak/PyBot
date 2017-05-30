@@ -21,13 +21,19 @@ public class BotListener extends ListenerAdapter{
             e.getChannel().sendMessage(e.getAuthor().getAsMention() + " Pong!").queue();
         }
         
-        simpleResponse(e, "hi", " Hello!");
-        simpleResponse(e, "hi pybot", " Hello to you too!");
+        simpleResponse(e, "hi", "Py!");
+        simpleResponse(e, "bye", "Py!");
+        simpleResponse(e, "hi pybot", "Hello to you too!");
+        
+        simpleResponse(e, "hilt", "Gefess");
+        simpleResponse(e, "pommel", "Knopff");
+        simpleResponse(e, "grip", "Bindt");
+        simpleResponse(e, "cross", "Creutz");
     }
     
     public void simpleResponse(MessageReceivedEvent e, String input, String output) {
         if (e.getMessage().getRawContent().equalsIgnoreCase(input)) {
-            e.getChannel().sendMessage(e.getAuthor().getAsMention() + output).queue();
+            e.getChannel().sendMessage(e.getAuthor().getAsMention() + " " + output).queue();
         }
     }
     
