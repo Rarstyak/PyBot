@@ -29,6 +29,7 @@ public class BotListener extends ListenerAdapter{
 {"Primary Guard : [Ox]","Ochs"},
 {"Primary Guard : [Plow]","Pflug"},
 {"Primary Guard : [Fool]","Olber"},
+
 {"Secondary Guard : [Change]","Wechsel"},
 {"Secondary Guard : [Side Guard]","Nebenhut"},
 {"Secondary Guard : [Crossed Guard]","Schrankhut"},
@@ -41,6 +42,7 @@ public class BotListener extends ListenerAdapter{
 {"Secondary Guard : [Wrath Guard]","Zornhut"},
 {"Secondary Guard : [Crown]","Kron"},
 {"Secondary Guard : [One Horn; Unicorn]","Einhorn"},
+
 {"Basic Cut : [Over Cut]","Oberhauw"},
 {"Basic Cut : [Middle Cut]","Mittelhauw"},
 {"Basic Cut : [Under Cut]","Underhauw"},
@@ -60,13 +62,16 @@ public class BotListener extends ListenerAdapter{
 {"Secondary Cut : [Wrist Cut]","Kniechelhauw"},
 {"Secondary Cut : [Crown Cut]","Kronhauw"},
 {"Secondary Cut : [Flick/Tag Hit]","Schneller/Zeckrur"},
+
 {"Parts : [Approch]","Zufechten"},
 {"Parts : [War]","Krieg"},
 {"Parts : [Withdraw]","Abzug"},
+
 {"Times : [Before]","Vor"},
 {"Times : [After]","Nach"},
 {"Times : [Simultaneously]","Gleich"},
 {"Times : [Instantaneous]","Indeß"},
+
 {"Handworks : [Parrying]","Versetzen"},
 {"Handworks : [Handwork]","Handtarbeit"},
 {"Handworks : [Binding/Remaining/Feeling]","Anbinden/Bleiben/Fülen"},
@@ -79,6 +84,7 @@ public class BotListener extends ListenerAdapter{
 {"Handworks : [Setting Off]","Absetzen"},
 {"Handworks : [Slinging]","Schlaudern"},
 {"Handworks : [Pulling]","Zucken"},
+
 {"Handworks : [Doubling]","Doplieren"},
 {"Handworks : [Reversing]","Verkehren"},
 {"Handworks : [Snapping Around]","Umbschnappen"},
