@@ -75,7 +75,6 @@ public enum MeyerTerm {
     ABSETZEN        ("Umbschlagen",     "Setting Off",      "Handwork"),
     SCHLAUDERN      ("Schlaudern",      "Slinging",         "Handwork"),
     ZUCKEN          ("Zucken",          "Pulling",          "Handwork"),
-    
     DOPLIEREN       ("Doplieren",       "Doubling",         "Handwork"),
     VERKEHREN       ("Verkehren",       "Reversing",        "Handwork"),
     UMBSCHNAPPEN    ("Umbschnappen",    "Snapping Around",  "Handwork"),

@@ -17,19 +17,35 @@ public class MeyerListener extends ListenerAdapter{
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
         String eRaw = e.getMessage().getRawContent();
-        /*OVERLOADS LIKE CRAZY
-        if (eRaw.equalsIgnoreCase("py meyerterms")) {
-            for (MeyerTerm term:MeyerTerm.class.getEnumConstants()) {
-                sendToSame(e, term.name());
-            }
-        }*/
         
+        //py Help
+        if (eRaw.equalsIgnoreCase("py help")) {
+            sendToSame(e, 
+                    "PY! This bot knows some longsword terms! "
+                    + "\n[py] is the key for this bot."
+                    + "\n[py TERM] will get you the names and descriptions of a term"
+                    + "\n[py search] INQUIRY will get you a list of terms containing the inquiry.");
+        }
+        
+        //py specific term
         for (MeyerTerm term:MeyerTerm.class.getEnumConstants()) {
             if (eRaw.equalsIgnoreCase("py " + term.name())) {
                 sendToSame(e, term.NameGerAndNameEngAndDesc());
             }
         }
-                
+        
+        //py search terms
+        if (eRaw.startsWith("py search ")) {
+            String results = "";
+            for (MeyerTerm term:MeyerTerm.class.getEnumConstants()) {
+                if (term.name().toLowerCase().contains(eRaw.substring(10).toLowerCase())) {
+                    results = results.concat(", " + term.name());
+                }
+            }
+            sendToSame(e, results.substring(2));
+        }
+        
+        
         
     }
     
