@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pybot;
-import pybot.Meyer.MeyerListener;
+package main.java;
+
+import main.java.Meyer.MeyerListener;
 
 import javax.security.auth.login.LoginException;
 
