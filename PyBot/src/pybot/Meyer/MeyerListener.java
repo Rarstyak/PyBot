@@ -25,7 +25,7 @@ public class MeyerListener extends ListenerAdapter{
                     + "\n[py] is the key for this bot."
                     + "\n[py TERM] will get you the names and descriptions of a term."
                     + "\n[py search] INQUIRY will get you a list of terms containing the inquiry."
-                    + "Pybot enjoys the consumption of blueberrypy.");
+                    + "\nPybot enjoys the consumption of blueberrypy.");
         }
         
         //py specific term
@@ -40,7 +40,9 @@ public class MeyerListener extends ListenerAdapter{
             String results = "";
             for (MeyerTerm term:MeyerTerm.class.getEnumConstants()) {
                 if (term.name().toLowerCase().contains(eRaw.substring(10).toLowerCase())) {
-                    results = results.concat(", " + term.name());
+                    results = results.concat(",\n" + term.name());
+                } else if (term.nameEng().toLowerCase().contains(eRaw.substring(10).toLowerCase())) {
+                    results = results.concat(",\n" + term.name() + " [" + term.nameEng() + "]");
                 }
             }
             sendToSame(e, results.substring(2));
