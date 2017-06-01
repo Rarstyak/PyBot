@@ -23,8 +23,9 @@ public class MeyerListener extends ListenerAdapter{
             sendToSame(e, 
                     "PY! This bot knows some longsword terms! "
                     + "\n[py] is the key for this bot."
-                    + "\n[py TERM] will get you the names and descriptions of a term"
-                    + "\n[py search] INQUIRY will get you a list of terms containing the inquiry.");
+                    + "\n[py TERM] will get you the names and descriptions of a term."
+                    + "\n[py search] INQUIRY will get you a list of terms containing the inquiry."
+                    + "Pybot enjoys the consumption of blueberrypy.");
         }
         
         //py specific term

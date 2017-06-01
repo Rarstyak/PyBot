@@ -26,7 +26,9 @@ public class PyBot {
     public static void main(String[] args) {
         
         try{
-            jda = new JDABuilder(AccountType.BOT).setToken(BOT_TOKEN).buildBlocking();
+            jda = new JDABuilder(AccountType.BOT)
+                    .setToken(BOT_TOKEN)
+                    .buildBlocking();
             //jda.addEventListener(new BotListener())
             jda.addEventListener(new MeyerListener());
         } catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {

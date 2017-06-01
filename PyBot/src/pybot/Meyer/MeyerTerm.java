@@ -10,23 +10,67 @@ package pybot.Meyer;
  * @author BNC
  */
 public enum MeyerTerm {
-    TAG             ("Von Tag",         "Roof",             "Primary Guard"),
-    OCHS            ("Ochs",            "Ox",               "Primary Guard"),
-    PFLUG           ("Pflug",           "Plow",             "Primary Guard"),
-    OLBER           ("Olber",           "Fool",             "Primary Guard"),
+    JOACHIMMEYER    ("Joachim Meyer",   "",                 "ca. 1537 Basal - 1571 Schwerin"
+            + "\nCutler and Freifechter of Strasbourg"),
     //
-    WECHSEL         ("Wechsel",         "Change",           "Secondary Guard"),
-    NEBENHUT        ("Nebenhut",        "Side Guard",       "Secondary Guard"),
-    SCHRANKHUT      ("Schrankhut",      "Crossed Guard",    "Secondary Guard"),
-    EISENPORT       ("Eisenport",       "Iron Gate",        "Secondary Guard"),
-    MITTELHUT       ("Mittelhut",       "Middle Guard",     "Secondary Guard"),
-    SCHLUSSEL       ("Schlüßel",        "Key",              "Secondary Guard"),
-    LANGNORT        ("Langnort",        "Longpoint",        "Secondary Guard"),
+    KNOPF           ("Knopf",           "Pommel",           "Parts of the Sword"
+            + "\nCounter mass"),
+    ORT             ("Ort",             "Point",            "Parts of the Sword"
+            + "\nTip of the Sword"),
+    CREUTZ          ("Creutz",          "Quillon",          "Parts of the Sword"
+            + "\nCross-Guard"),
+    GEFES           ("Gefeß",           "Hilt",             "Parts of the Sword"
+            + "\nNon-Edged portion of the Sword"),
+    HEFT            ("Heft",            "Handle",           "Parts of the Sword"
+            + "\nHeld portion of the Hilt"),
+    BINDT           ("Bindt",           "Grip",             "Parts of the Sword"
+            + "\nBinding of the Handle"),
+    KLINGE          ("Klinge",          "Blade",            "Parts of the Sword"
+            + "\nEdged portion of the Sword"),
+    STERCKE         ("Stercke",         "Forte",            "Parts of the Sword"
+            + "\nFirst half of the Blade"),
+    SCHWECHE        ("Schweche",        "Foible",           "Parts of the Sword"
+            + "\nSecond half of the Blade"),
+    KURTZESCHNEIDE  ("Kurtze Schneide", "Short Edge",       "Parts of the Sword"
+            + "\nEdge aligned with wrist of main hand"),
+    LANGESCHNEIDE   ("Lange Schneide",  "Long Edge",        "Parts of the Sword"
+            + "\nEdge aligned with knuckles of main hand"),
+    FLACH           ("Flach",           "Flat",             "Parts of the Sword"
+            + "\nFlat portion of the Blade"),
+    //
+    OCHS            ("Ochs",            "Ox",               "Primary Guard"
+            + "\nRight Ochs: left foot forward, hilt to right of head, point at opponent"),
+    PFLUG           ("Pflug",           "Plow",             "Primary Guard"
+            + "\nRight Pflug: right foot forward, hilt by forward knee, point at opponent"),
+    TAG             ("Tag",             "Day",              "Primary Guard"
+            + "\nPosture: left foot forward, sword over head, pommel in peripheral vision, 45 degrees"),
+    OBERHUT         ("Oberhut",         "High Guard",       "See TAG"),
+    OLBER           ("Olber",           "Fool",             "Primary Guard"
+            + "\nPosture: left foot forward, point extended past forward foot, long edge downward, short edge upward"),
+    //
+    ZORNHUT         ("Zornhut",         "Wrath Guard",      "Secondary Guard"
+            + "\nPosture: left foot forward, sword on right shoulder, tip in peripheral vision"),
+    LANGNORT        ("Langnort",        "Longpoint",        "Secondary Guard"
+            + "\nPosture: left foot forward, sword and arms extended, point at opponent"),
     BRECHFENSTER    ("Brechfenster",    "Break Window",     "See LANGNORT"),
-    SPRECHFENSTER   ("ßprechfenster",   "Speaking Window",  "Secondary Guard"),
-    HANGETORT       ("Hangetort",       "Hanging Point",    "Secondary Guard"),
-    ZORNHUT         ("Zornhut",         "Wrath Guard",      "Secondary Guard"),
-    EINHORN         ("Einhorn",         "One Horn",         "Secondary Guard"),
+    WECHSEL         ("Wechsel",         "Change",           "Secondary Guard"
+            + "\nPosture: right foot forward, point to ground at left, short edge at opponent"),
+    NEBENHUT        ("Nebenhut",        "Side Guard",       "Secondary Guard"
+            + "\nPosture: left foot forward, point to ground at right, pommel at opponent"),
+    EISENPORT       ("Eisenport",       "Iron Gate",        "Secondary Guard"
+            + "\nPosture: right foot forward, hilt at knee, point at opponent"),
+    SCHRANKHUT      ("Schrankhut",      "Crossed Guard",    "Secondary Guard"
+            + "\nPosture: point at ground with crossed hands"),
+    HANGETORT       ("Hangetort",       "Hanging Point",    "Secondary Guard"
+            + "\nPosture: right foot forward, sword and arms extended, point somewhat towards ground"),
+    SCHLUSSEL       ("Schlüßel",        "Key",              "Secondary Guard"
+            + "\nPosture: left foot forward, hilt and crossed hands at chest, point at opponent, short edge downward"),
+    EINHORN         ("Einhorn",         "One Horn",         "Secondary Guard"
+            + "\nPosture: left foot forward, crossed hands at right, point upwards"),
+    MITTELHUT       ("Mittelhut",       "Middle Guard",     "Secondary Guard"
+            + "\nFlat rests on arm"),
+    SPRECHFENSTER   ("ßprechfenster",   "Speaking Window",  "Secondary Guard"
+            + "\nSword in front, in Bind"),
     //
     OBERHAUW        ("Oberhauw",        "High Cut",         "Straight Cut"),
     SCHEIDELHAUW    ("Scheidelhauw",    "Scalp Cut",        "See OBERHAUW"),
@@ -51,6 +95,12 @@ public enum MeyerTerm {
     WECHSELHAUW     ("Wechselhauw",     "Change Cut",       "Reverse Cut"),
     SCHNELLER       ("Schneller",       "Flick",            "Reverse Cut"),
     ZECKRUR         ("Zeckrur",         "Tag-Hit",          "See SCHNELLER"),
+    FLUGELHAUW      ("Flügelhauw",      "Wing Cut",         "Reverse Cut"),
+    //
+    PASSING         ("",                "Passing Step",     "Step"),
+    GATHERING       ("",                "Gathering Step",   "Step"),
+    MASTER          ("",                "Master Step",      "Step"),
+    SIMPLE          ("",                "Simple Step",      "Step"),
     //
     ZUFECHTEN       ("Zufechten",       "Approch",          "Part"),
     KRIEG           ("Krieg",           "War",              "Part"),
@@ -61,8 +111,8 @@ public enum MeyerTerm {
     GLEICH          ("Gleich",          "Simultaneously",   "Time"),
     INDES           ("Indeß",           "Instantaneous",    "Time"),
     //
-    VERSETZEN       ("Versetzen",       "Parrying",         "-"),
-    HANDTARBEIT     ("Handtarbeit",     "Handwork",         "-"),
+    VERSETZEN       ("Versetzen",       "Parrying",         "Handwork"),
+    HANDTARBEIT     ("Handtarbeit",     "Handwork",         ""),
     ANBINDEN        ("Versetzen",       "Binding",          "Handwork"),
     BLEIBEN         ("Bleiben",         "Remaining",        "Handwork"),
     FULEN           ("Fülen",           "Feeling",          "Handwork"),
@@ -108,8 +158,16 @@ public enum MeyerTerm {
     public String nameEng(){return nameEng;};    
     public String Desc(){return Desc;};
     
-    public String NameGerAndDesc(){return nameGer + " : " + Desc;};
-    public String NameEngAndDesc(){return nameEng + " : " + Desc;};
-    public String NameGerAndNameEngAndDesc(){return nameGer + " [" + nameEng + "] : " + Desc;};
+    public String NameGerAndNameEngAndDesc(){
+        String full = "";
+        full = full.concat(nameGer);
+        if(!nameEng.isEmpty()){
+            full = full.concat(" [" + nameEng + "]");  
+        }
+        if(!Desc.isEmpty()){
+            full = full.concat(" : " + Desc);  
+        }
+        return full;
+    };
     
 }
