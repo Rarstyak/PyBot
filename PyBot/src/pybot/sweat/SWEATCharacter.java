@@ -68,9 +68,9 @@ public final class SWEATCharacter implements Serializable{
             aStat = "a".matches(stat1) ? hold2 : "a".matches(stat2) ? hold1 : aStat;
             tStat = "t".matches(stat1) ? hold2 : "t".matches(stat2) ? hold1 : tStat;
             update();
-            return "Success"+stat1+"now"+hold2+"and"+stat2+"now"+hold1;
+            return "Success! "+getCharName()+"'s "+stat1+" is now "+hold2+" and "+stat2+" is now "+hold1+".";
         } else {
-            return "Failed"+stat1+"<>"+stat2;
+            return "Failed to switch "+getCharName()+"'s "+stat1+" and "+stat2+".";
         }
     }
     
@@ -88,7 +88,7 @@ public final class SWEATCharacter implements Serializable{
         update();
         return getCharName()+" is ready to adventure!";
         } else {
-            return "Failed";
+            return "Failed to prepare "+getCharName()+" for adventure.";
         }
         
     }
@@ -141,13 +141,13 @@ public final class SWEATCharacter implements Serializable{
     public String skillCheck(String stat){
         byte check = ("s".equals(stat)) ? sStat : ("w".equals(stat)) ? wStat : ("e".equals(stat)) ? eStat : ("a".equals(stat)) ? aStat : ("t".equals(stat)) ? tStat : 0;
         int result = pDie();
-        return ((result<check) ? "Success" : "Failure") + "! Rolled "+result+" against "+check;
+        return ((result<check) ? "Success" : "Failure") + "! "+getCharName()+" Rolled "+result+" against "+check;
     }
     
     public String skillCheck(String stat, int abilityMod){
         byte check = ("s".equals(stat)) ? sStat : ("w".equals(stat)) ? wStat : ("e".equals(stat)) ? eStat : ("a".equals(stat)) ? aStat : ("t".equals(stat)) ? tStat : 0;
         int result = pDie();
-        return ((result<(check+abilityMod)) ? "Success" : "Failure") + "! Rolled "+result+" against "+check+"+"+abilityMod;
+        return ((result<(check+abilityMod)) ? "Success" : "Failure") + "! "+getCharName()+" Rolled "+result+" against "+check+"+"+abilityMod+"="+(check+abilityMod);
     }
     
     public String addExp(int exp) {
@@ -187,6 +187,9 @@ public final class SWEATCharacter implements Serializable{
     
     public void update() {
         maxHealthPoints = (short) (aStat + tStat);
+        if (healthPoints>maxHealthPoints){
+            fullHeal();
+        }
     }
     
     public void fullHeal() {
