@@ -10,9 +10,8 @@ package pybot.Meyer;
  * @author BNC
  */
 public enum MeyerTermTag {
-    ALIAS,
-    
     PERSON,
+    
     SWORDPART,
     GUARD,
         PRIMARYGUARD,
@@ -26,5 +25,7 @@ public enum MeyerTermTag {
     STEP,
     FIGHTPART,
     TIMEPART,
-    HANDWORK
+    HANDWORK,
+    
+    ALIAS,
 }

@@ -5,6 +5,7 @@
  */
 package pybot;
 import pybot.Meyer.MeyerListener;
+import pybot.sweat.SWEATListener;
 
 import javax.security.auth.login.LoginException;
 
@@ -31,6 +32,7 @@ public class PyBot {
                     .buildBlocking();
             //jda.addEventListener(new BotListener())
             jda.addEventListener(new MeyerListener());
+            jda.addEventListener(new SWEATListener());
         } catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {
             e.printStackTrace();
         }

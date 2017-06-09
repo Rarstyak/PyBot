@@ -69,10 +69,10 @@ public enum MeyerTerm {
     ZECKRUR         ("Zeckrur",         "Tag-Hit",          "See SCHNELLER" +"\nDownward flick at head, Alias of Schneller",        MeyerTermTag.ALIAS),
     FLUGELHAUW      ("Flügelhauw",      "Wing Cut",         "Reverse Cut"   +"\nHilt up, clip to back through armpit",              MeyerTermTag.CUT, MeyerTermTag.REVERSECUT, MeyerTermTag.SECONDARYCUT),
     //
-    PASSING         ("",                "Passing Step",     "Step"  +"\nAdvance following foot past lead foot",                 MeyerTermTag.STEP),
-    GATHERING       ("",                "Gathering Step",   "Step"  +"\nGather with following foot, advance with lead foot",    MeyerTermTag.STEP),
-    MASTER          ("",                "Master Step",      "Step"  +"\nStep out with following foot, lead foot back",          MeyerTermTag.STEP),
-    SIMPLE          ("",                "Simple Step",      "Step"  +"\nAdvance lead foot then following foot",                 MeyerTermTag.STEP),
+    PASSING         ("-",                "Passing Step",     "Step"  +"\nAdvance following foot past lead foot",                 MeyerTermTag.STEP),
+    GATHERING       ("-",                "Gathering Step",   "Step"  +"\nGather with following foot, advance with lead foot",    MeyerTermTag.STEP),
+    MASTER          ("-",                "Master Step",      "Step"  +"\nStep out with following foot, lead foot back",          MeyerTermTag.STEP),
+    SIMPLE          ("-",                "Simple Step",      "Step"  +"\nAdvance lead foot then following foot",                 MeyerTermTag.STEP),
     //
     ZUFECHTEN       ("Zufechten",       "Approch",          "Parts of the Fight", MeyerTermTag.FIGHTPART),
     KRIEG           ("Krieg",           "War",              "Parts of the Fight", MeyerTermTag.FIGHTPART),

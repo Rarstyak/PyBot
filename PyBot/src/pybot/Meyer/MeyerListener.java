@@ -24,11 +24,11 @@ public class MeyerListener extends ListenerAdapter{
         if (eRaw.equalsIgnoreCase(KEY+"help")) {
             sendToSame(e, 
                     "PY! This bot knows some longsword terms! "
-                    + "\n[py] is the key for this bot."
-                    + "\n[py TERM] will get you the names and descriptions of a term."
-                    + "\n[py search INQUIRY] will get you a list of terms containing the inquiry."
-                    + "\n[py tags list] will get you a list tags."
-                    + "\n[py tags INQUIRY] will get you a list of terms with the tag."
+                    + "\n{py} is the key for this bot."
+                    + "\n{py TERM} will get you the names and descriptions of a term."
+                    + "\n{py search INQUIRY} will get you a list of terms containing the inquiry."
+                    + "\n{py tags list} will get you a list tags."
+                    + "\n{py tags INQUIRY} will get you a list of terms with the tag."
                     + "\nPybot enjoys the consumption of blueberrypy.");
         }
         
