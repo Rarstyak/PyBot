@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,6 +66,7 @@ public class SWEATListener extends ListenerAdapter{
                     + "\n   3) At least one stat must remain unchanged"
                     + "\n   4) This can only be done once at lvl 0, and is permenant"
                     + "\n   e) Yeah, this works for multiple as well"
+                    + "\n{;;assign[NAME][S][W][E][A][T]} when you level up, you get some points to spend on increasing you stats... but yeah, it can get confusing to do more than one at a time"
                     + "\n{;;new armor[NAME][ARMORNAME][ARMORBONUS]} will change the armor that [NAME] has... guess if this can be extended to multiple assignments... that's right Steve."
                     + "\n{;;new weapon[NAME][WEAPONNAME][ATTACKDIE]} will change the weapon that [NAME] has... Yes, Steve."
                     + "\n..."
@@ -74,6 +76,9 @@ public class SWEATListener extends ListenerAdapter{
                     + "\n{;;armor [NAME]} pulls specified character armor statments... you know the-"
                     + "\n{;;weapon [NAME]} pulls specified character weapon statements... you know-"
                     + "\n{;;equiped [NAME]} pulls specified character armor and weapon statements... Steve. Stop cutting me off."
+                    + "\n..."
+                    + "\n{;;check [NAME][STAT]} try to roll under! And- Yes."
+                    + "\n{;;mod check [NAME][STAT][STATMOD]} andYouDon'tNeedToRollIfYouGetABonusOfOneHundred... haah. hah... You couldn't cut me off Steve!"
                     + "\n..."
                     + "\n...ADMINcmd {;;save ;;wipe}"
                     + "\n..."
@@ -90,10 +95,8 @@ public class SWEATListener extends ListenerAdapter{
                 for (int i =0;i<param.length;i+=2) {
                     SWEATCharacter temp = new SWEATCharacter(param[i], param[i+1]);
                     boolean alreadyNamedThat = false;
-                    for (SWEATCharacter hero : heros) {
-                        if(hero.getCharName().equals(temp.getCharName())) {
-                            alreadyNamedThat = true;
-                        }
+                    if (-1!=getIndex(temp.getCharClass())){
+                        alreadyNamedThat = true;
                     }
                     if (!alreadyNamedThat) {
                         heros.add(temp);
@@ -121,11 +124,10 @@ public class SWEATListener extends ListenerAdapter{
             if (param.length>=3 && param.length%3==0) {
                 String result = "";
                 for (int i=0;i<param.length;i+=3) {
-                    for (int j=0;j<heros.size();j++){
-                        if(heros.get(j).getCharName().equals(param[i])) {
-                            result = result.concat("\n"+heros.get(j).switchStats(param[i+1].substring(0, 1).toLowerCase(), param[i+2].substring(0, 1).toLowerCase()));
-                        }
-                    }                                
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).switchStats(param[i+1].substring(0, 1).toLowerCase(), param[i+2].substring(0, 1).toLowerCase()));
+                    }
                 }
                 sendToSame(e,result.substring(1));
             }
@@ -137,11 +139,25 @@ public class SWEATListener extends ListenerAdapter{
             if (param.length>=6 && param.length%6==0) {
                 String result = "";
                 for (int i=0;i<param.length;i+=6) {
-                    for (int j=0;j<heros.size();j++){
-                        if(heros.get(j).getCharName().equals(param[i])) {
-                            result = result.concat("\n"+heros.get(j).applyTraits(Integer.parseInt(param[i+1]), Integer.parseInt(param[i+2]), Integer.parseInt(param[i+3]), Integer.parseInt(param[i+4]), Integer.parseInt(param[i+5])));
-                        }
-                    }                                
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).applyTraits(Integer.parseInt(param[i+1]), Integer.parseInt(param[i+2]), Integer.parseInt(param[i+3]), Integer.parseInt(param[i+4]), Integer.parseInt(param[i+5])));
+                    }
+                }
+                sendToSame(e,result.substring(1));
+            }
+        }
+        
+        //ASSIGN , [Name][sMod][wMod][eMod][aMod][tMod]
+        if (eRaw.toLowerCase().startsWith(KEY+"assign")) {
+            String[] param = extractFlags(eRaw);
+            if (param.length>=6 && param.length%6==0) {
+                String result = "";
+                for (int i=0;i<param.length;i+=6) {
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).spendPoints(Integer.parseInt(param[i+1]), Integer.parseInt(param[i+2]), Integer.parseInt(param[i+3]), Integer.parseInt(param[i+4]), Integer.parseInt(param[i+5])));
+                    }
                 }
                 sendToSame(e,result.substring(1));
             }
@@ -153,11 +169,10 @@ public class SWEATListener extends ListenerAdapter{
             if (param.length>=3 && param.length%3==0) {
                 String result = "";
                 for (int i=0;i<param.length;i+=3) {
-                    for (int j=0;j<heros.size();j++){
-                        if(heros.get(j).getCharName().equals(param[i])) {
-                            result = result.concat("\n"+heros.get(j).setArmor(param[i+1], (byte)Integer.parseInt(param[i+2])));
-                        }
-                    }                                
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).setArmor(param[i+1], (byte)Integer.parseInt(param[i+2])));
+                    }
                 }
                 sendToSame(e,result.substring(1));
             }
@@ -169,11 +184,10 @@ public class SWEATListener extends ListenerAdapter{
             if (param.length>=3 && param.length%3==0) {
                 String result = "";
                 for (int i=0;i<param.length;i+=3) {
-                    for (int j=0;j<heros.size();j++){
-                        if(heros.get(j).getCharName().equals(param[i])) {
-                            result = result.concat("\n"+heros.get(j).setWeapon(param[i+1], (byte)Integer.parseInt(param[i+2])));
-                        }
-                    }                                
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).setWeapon(param[i+1], (byte)Integer.parseInt(param[i+2])));
+                    }
                 }
                 sendToSame(e,result.substring(1));
             }
@@ -205,7 +219,7 @@ public class SWEATListener extends ListenerAdapter{
             String[] param = extractFlags(eRaw);
             for (String p : param) {
                 for (SWEATCharacter hero : heros) {
-                    if (hero.getCharName().equals(p)) {
+                    if (hero.getCharName().equalsIgnoreCase(p)) {
                         results = results.concat("\n\n"+hero.getCharacterSheet());
                     }
                 }                             
@@ -219,7 +233,7 @@ public class SWEATListener extends ListenerAdapter{
             String[] param = extractFlags(eRaw);
             for (String p : param) {
                 for (SWEATCharacter hero : heros) {
-                    if (hero.getCharName().equals(p)) {
+                    if (hero.getCharName().equalsIgnoreCase(p)) {
                         results = results.concat("\n"+hero.getArmor());
                     }
                 }                             
@@ -233,7 +247,7 @@ public class SWEATListener extends ListenerAdapter{
             String[] param = extractFlags(eRaw);
             for (String p : param) {
                 for (SWEATCharacter hero : heros) {
-                    if (hero.getCharName().equals(p)) {
+                    if (hero.getCharName().equalsIgnoreCase(p)) {
                         results = results.concat("\n"+hero.getWeapon());
                     }
                 }                             
@@ -247,7 +261,7 @@ public class SWEATListener extends ListenerAdapter{
             String[] param = extractFlags(eRaw);
             for (String p : param) {
                 for (SWEATCharacter hero : heros) {
-                    if (hero.getCharName().equals(p)) {
+                    if (hero.getCharName().equalsIgnoreCase(p)) {
                         results = results.concat("\n"+hero.getArmor()+"\n"+hero.getWeapon());
                     }
                 }                             
@@ -262,29 +276,60 @@ public class SWEATListener extends ListenerAdapter{
             if (param.length>=2 && param.length%2==0) {
                 String result = "";
                 for (int i=0;i<param.length;i+=2) {
-                    for (int j=0;j<heros.size();j++){
-                        if(heros.get(j).getCharName().equals(param[i])) {
-                            result = result.concat("\n"+heros.get(j).skillCheck(param[i+1].substring(0, 1).toLowerCase()));
-                        }
-                    }                                
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).skillCheck(param[i+1].substring(0, 1).toLowerCase()));
+                    }
                 }
                 sendToSame(e,result.substring(1));
             }
         }
         
-        //CHECK , [NAME][STAT][MOD]
+        //MOD CHECK , [NAME][STAT][MOD]
         if (eRaw.toLowerCase().startsWith(KEY+"mod check")) {
             String[] param = extractFlags(eRaw);
             if (param.length>=3 && param.length%3==0) {
                 String result = "";
                 for (int i=0;i<param.length;i+=3) {
-                    for (int j=0;j<heros.size();j++){
-                        if(heros.get(j).getCharName().equals(param[i])) {
-                            result = result.concat("\n"+heros.get(j).skillCheck(param[i+1].substring(0, 1).toLowerCase(),Integer.parseInt(param[i+2])));
-                        }
-                    }                                
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).skillCheck(param[i+1].substring(0, 1).toLowerCase(),Integer.parseInt(param[i+2])));
+                    }
                 }
                 sendToSame(e,result.substring(1));
+            }
+        }
+        
+        //======================================================================GET and SET
+        
+        //VS , initial stats [ATTACKERNAME][DEFENDERNAME]==========================ARUAGGGGG
+        if (eRaw.toLowerCase().startsWith(KEY+"vs")) {
+            String[] param = extractFlags(eRaw);
+            if (param.length>=2 && param.length%2==0) {
+                String result = "";
+                for (int i=0;i<param.length;i+=2) {
+                    int attackerIndex = getIndex(param[i]);
+                    int defenderIndex = getIndex(param[i+1]);
+                    if (attackerIndex!=defenderIndex && -1!=attackerIndex && -1!=defenderIndex) {
+                        byte a = heros.get(attackerIndex).getA();
+                        int d = heros.get(defenderIndex).totalDefense();
+                        int roll = SWEATCharacter.pDie();
+                        String atkName = heros.get(attackerIndex).getCharName();
+                        String defName = heros.get(defenderIndex).getCharName();
+                        if ((heros.get(attackerIndex).getA()+roll)>=heros.get(defenderIndex).totalDefense()){
+                            int atkroll = heros.get(attackerIndex).rollAttack();
+                            heros.get(defenderIndex).changeHP(-atkroll);
+                            result = result.concat("\n\n"+atkName+" attacked "+defName+" for "+atkroll+" dmg with "+a+"+"+roll+"="+(a+roll)+" vs "+d+
+                                    "\n"+heros.get(defenderIndex).getHP());
+                        } else {
+                            result = result.concat("\n\n"+atkName+" failed to hurt "+defName+" with "+a+"+"+roll+"="+(a+roll)+" vs "+d);
+                        }
+                    } else {
+                        result = "X"+attackerIndex+" : "+defenderIndex;
+                                //"XCombantants not found.";
+                    }
+                }
+                sendToSame(e,result.substring(2));
             }
         }
         
@@ -298,6 +343,19 @@ public class SWEATListener extends ListenerAdapter{
             save();
         }
         
+        //======================================================================TESTING
+        
+        //sendToSame(e,Arrays.toString(extractFlags(eRaw)));
+        
+    }
+    
+    public int getIndex(String name) {
+        for (int i=0;i<heros.size();i++){
+            if (heros.get(i).getCharName().equalsIgnoreCase(name)) {
+                return i;
+            }
+        }
+        return -1;
     }
     
     public int countFlags(String str){

@@ -29,6 +29,7 @@ public class MeyerListener extends ListenerAdapter{
                     + "\n{py search INQUIRY} will get you a list of terms containing the inquiry."
                     + "\n{py tags list} will get you a list tags."
                     + "\n{py tags INQUIRY} will get you a list of terms with the tag."
+                    + "\nDisclaimer: This bot is only as accurate as the author's knowledge"
                     + "\nPybot enjoys the consumption of blueberrypy.");
         }
         

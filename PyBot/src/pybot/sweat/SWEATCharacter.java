@@ -45,6 +45,25 @@ public final class SWEATCharacter implements Serializable{
         update();
     }
     
+    public SWEATCharacter(String charName, String charClass, byte level, int exp, byte s, byte w, byte e, byte a, byte t, int unassignedPoints, String armor, byte armorBonus, String weapon, byte weaponDie) {
+        this.charName = charName;
+        this.charClass = charClass;
+        this.level = level;
+        this.exp = exp;
+        this.unassignedPoints = unassignedPoints;
+        
+        this.sStat = s;
+        this.wStat = w;
+        this.eStat = e;
+        this.aStat = a;
+        this.tStat = t;
+        
+        setArmor(armor, armorBonus);
+        setWeapon(weapon, weaponDie);
+        
+        fullHeal();
+    }
+    
     public String getCharacterSheet() {
         String unConscious = (healthPoints<=0)? " UNCONSCIOUS": "";
         return String.format(
@@ -85,7 +104,7 @@ public final class SWEATCharacter implements Serializable{
         this.aStat += aMod;
         this.tStat += tMod;
         this.level = 1;
-        update();
+        fullHeal();
         return getCharName()+" is ready to adventure!";
         } else {
             return "Failed to prepare "+getCharName()+" for adventure.";
@@ -93,7 +112,7 @@ public final class SWEATCharacter implements Serializable{
         
     }
     
-    public void spendPoints(int sMod, int wMod, int eMod, int aMod, int tMod) {
+    public String spendPoints(int sMod, int wMod, int eMod, int aMod, int tMod) {
         int posMod = ((sMod>0) ? sMod : 0) + ((wMod>0) ? wMod : 0) + ((eMod>0) ? eMod : 0) + ((aMod>0) ? aMod : 0) + ((tMod>0) ? tMod : 0);
         int negMod = ((sMod<0) ? sMod : 0) + ((wMod<0) ? wMod : 0) + ((eMod<0) ? eMod : 0) + ((aMod<0) ? aMod : 0) + ((tMod<0) ? tMod : 0);
         
@@ -105,7 +124,30 @@ public final class SWEATCharacter implements Serializable{
         this.tStat += tMod;
         unassignedPoints -=posMod;
         update();
+        return getCharName()+" has "+unassignedPoints+" points left.";
+        } else {
+            return "Try again";
         }
+    }
+    
+    public byte getS(){
+        return sStat;
+    }
+    
+    public byte getW(){
+        return wStat;
+    }
+    
+    public byte getE(){
+        return eStat;
+    }
+    
+    public byte getA(){
+        return aStat;
+    }
+    
+    public byte getT(){
+        return tStat;
     }
     
     public String getCharName(){
@@ -117,18 +159,22 @@ public final class SWEATCharacter implements Serializable{
     }
     
     public String setArmor(String armorName, byte armorBonus) {
-        String result = charName+" had a "+this.armorName+" with "+this.armorBonus+" armor, and has switched to a ";
+        String result = charName+" had a "+this.armorName+" with "+this.armorBonus+" armor, and has switched to a(n) ";
         this.armorName = armorName;
         this.armorBonus = armorBonus;
         return result.concat(this.armorName+" with "+this.armorBonus+" armor!");
     }
     
     public String getArmor() {
-        return charName+" has a "+this.armorName+" with "+this.armorBonus+" armor.";
+        return charName+" has a(n) "+this.armorName+" with "+this.armorBonus+" armor.";
+    }
+    
+    public int totalDefense(){
+        return tStat+armorBonus;
     }
     
     public String setWeapon(String weaponName, byte weaponDie) {
-        String result = charName+" had a "+this.weaponName+" with "+this.weaponDie+" rolls of attack, and has switched to a ";
+        String result = charName+" had a "+this.weaponName+" with "+this.weaponDie+" rolls of attack, and has switched to a(n) ";
         this.weaponName = weaponName;
         this.weaponDie = weaponDie;
         return result.concat(this.weaponName+" with "+this.weaponDie+" rolls of attack!");
@@ -138,6 +184,10 @@ public final class SWEATCharacter implements Serializable{
         return charName+" has a "+this.weaponName+" with "+this.weaponDie+" rolls of attack!";
     }
     
+    public int rollAttack() {
+        return nd10(weaponDie);
+    }
+            
     public String skillCheck(String stat){
         byte check = ("s".equals(stat)) ? sStat : ("w".equals(stat)) ? wStat : ("e".equals(stat)) ? eStat : ("a".equals(stat)) ? aStat : ("t".equals(stat)) ? tStat : 0;
         int result = pDie();
@@ -179,6 +229,12 @@ public final class SWEATCharacter implements Serializable{
             level += 1;
             byte roll1 = d10();
             byte roll2 = d10();
+            byte roll3 = d10();
+            byte roll4 = d10();
+            if (eStat>55 && (roll1+roll2)<(roll3+roll4)) {
+                roll1 = roll3;
+                roll2 = roll4;
+            }
             unassignedPoints += 10 + roll1 + roll2;
             return charName+" is now level "+level+" with "+exp+" exp and haw gained 10+"+roll1+"+"+roll2+"="+(10+roll1+roll2)+" points, for a total of "+unassignedPoints+" unassigned points.";
         }
@@ -190,19 +246,35 @@ public final class SWEATCharacter implements Serializable{
         if (healthPoints>maxHealthPoints){
             fullHeal();
         }
+        if (healthPoints<0) {
+            healthPoints = 0;
+        }
     }
     
     public void fullHeal() {
+        update();
         healthPoints = maxHealthPoints;
     }
     
+    public void changeHP(int change) {
+        healthPoints += change;
+        update();
+    }
+    
+    public String getHP() {
+        String unConscious = (healthPoints<=0)? " UNCONSCIOUS": "";
+        return String.format(
+                "%1$s %3$03d / %4$03d HP%2$s"
+                ,charName, unConscious, healthPoints, maxHealthPoints);
+    }
+    
     //roll a d10
-    public byte d10() {
+    public static byte d10() {
         return (byte) randInt(1,10);
     }
     
     //sum of n d10s
-    public int nd10(int n) {
+    public static int nd10(int n) {
         int number = 0;
         for (byte i=0; i<n; i++){
             number += d10();
@@ -211,11 +283,11 @@ public final class SWEATCharacter implements Serializable{
     }
     
     //random 1-100
-    public int pDie() {
+    public static int pDie() {
         return randInt(1,100);
     }
     
-    public int randInt(int min, int max) {
+    public static int randInt(int min, int max) {
         Random rand = new Random();
         return rand.nextInt((max-min)+1)+min;
     }
