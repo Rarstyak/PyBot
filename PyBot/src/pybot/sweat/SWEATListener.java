@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +43,7 @@ public class SWEATListener extends ListenerAdapter{
     */
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        if (!ready){
+        if (!ready || e.getAuthor().isBot() || !e.getChannel().getName().toLowerCase().contains("sweat") ){
             return;
         }
         String eRaw = e.getMessage().getRawContent();
@@ -56,7 +55,23 @@ public class SWEATListener extends ListenerAdapter{
                     + "\n{;;} is the key for this bot"
                     + "\n{;;help} bring this message back up... but you already knew that Steve."
                     + "\n..."
+                    + "\nWhat? Not Helpful? Fine."
+                    + "\n{;;help create}"
+                    + "\n{;;help sheet}"
+                    + "\n{;;help checks}"
+                    + "\n{;;help gm}"
+                    + "\n{;;help admin}"
+                    + "\n..."
+                    + "\nAlso, you need to have fun. Yeah, I know you already know that Steve, no need to fuss."
+            );
+        }
+        
+        
+        if (eRaw.equalsIgnoreCase(KEY+"help create")) {
+            sendToSame(e, 
+                    "Character Creation"
                     + "\n{;;new[NAME][CLASS]} creates a new character, if you want you can create multiple characters, just make sure that the names and classes match up or no characters will be created!"
+                //  + "\n{;;summon[NAME][CLASS][LEVEL][EXP][S][W][E][A][T][uP][ARMOR][ARMORBONUS][WEAPON][WEAPONDIE]}Keep this one on the low Steve"
                     + "\n{;;delete[NAME]} deletes all the characters with those names"
                     + "\n{;;switch[NAME][STAT1][STAT2]} for a new character at lvl 0, switches the stats, works for multiple"
                     + "\n   1) Any combination of letters that begin with the first letter of the statistic works, including just the first letter..."
@@ -66,23 +81,47 @@ public class SWEATListener extends ListenerAdapter{
                     + "\n   3) At least one stat must remain unchanged"
                     + "\n   4) This can only be done once at lvl 0, and is permenant"
                     + "\n   e) Yeah, this works for multiple as well"
-                    + "\n{;;assign[NAME][S][W][E][A][T]} when you level up, you get some points to spend on increasing you stats... but yeah, it can get confusing to do more than one at a time"
+                    + "\n{;;assign[NAME][S][W][E][A][T]} when you level up, you get some points to spend on increasing you stats... but yeah, it can get confusing to do more than one at a time... the cap? Well, try to aim for 110% of your best?"
                     + "\n{;;new armor[NAME][ARMORNAME][ARMORBONUS]} will change the armor that [NAME] has... guess if this can be extended to multiple assignments... that's right Steve."
                     + "\n{;;new weapon[NAME][WEAPONNAME][ATTACKDIE]} will change the weapon that [NAME] has... Yes, Steve."
-                    + "\n..."
+            );
+        }
+        
+        if (eRaw.equalsIgnoreCase(KEY+"help sheet")) {
+            sendToSame(e, 
+                    "Character Sheets"
                     + "\n{;;all} pulls up a list of all the characters"
                     + "\n{;;all sheets} pulls up all of the character sheets"
                     + "\n{;;sheet [NAME]} pulls specified character sheets... you know the drill Steve"
                     + "\n{;;armor [NAME]} pulls specified character armor statments... you know the-"
                     + "\n{;;weapon [NAME]} pulls specified character weapon statements... you know-"
                     + "\n{;;equiped [NAME]} pulls specified character armor and weapon statements... Steve. Stop cutting me off."
-                    + "\n..."
-                    + "\n{;;check [NAME][STAT]} try to roll under! And- Yes."
-                    + "\n{;;mod check [NAME][STAT][STATMOD]} andYouDon'tNeedToRollIfYouGetABonusOfOneHundred... haah. hah... You couldn't cut me off Steve!"
-                    + "\n..."
+            );
+        }
+        
+        if (eRaw.equalsIgnoreCase(KEY+"help checks")) {
+            sendToSame(e, 
+                    "Character Skill Checks"
+                   + "\n{;;check [NAME][STAT]} try to roll under! And- Yes."
+                   + "\n{;;mod check [NAME][STAT][STATMOD]} andYouDon'tNeedToRollIfYouGetABonusOfOneHundred... haah. hah... You couldn't cut me off Steve!"
+            );
+        }
+        
+        if (eRaw.equalsIgnoreCase(KEY+"help gm")) {
+            sendToSame(e, 
+                    "GM Commands"
+                    + "\n{;;vs [ATTACKER][DEFENDER]}"
+                    + "\n{;;change hp [NAME][AMOUNT]}"
+                    + "\n{;;full heal [NAME]}"
+                    + "\n{;;add exp [NAME][EXP]}"
+            );
+        }
+        
+        if (eRaw.equalsIgnoreCase(KEY+"help admin")) {
+            sendToSame(e, 
+                    "ADMIN Commands"
                     + "\n...ADMINcmd {;;save ;;wipe}"
-                    + "\n..."
-                    + "\nAlso, you need to have fun. Yeah, I know you already know that Steve, no need to fuss.");
+            );
         }
         
         //======================================================================SET BASED
@@ -95,7 +134,7 @@ public class SWEATListener extends ListenerAdapter{
                 for (int i =0;i<param.length;i+=2) {
                     SWEATCharacter temp = new SWEATCharacter(param[i], param[i+1]);
                     boolean alreadyNamedThat = false;
-                    if (-1!=getIndex(temp.getCharClass())){
+                    if (-1!=getIndex(temp.getCharName())){
                         alreadyNamedThat = true;
                     }
                     if (!alreadyNamedThat) {
@@ -109,11 +148,47 @@ public class SWEATListener extends ListenerAdapter{
             }
         }
         
+        //SUMMON , characters [Name]{Class}
+        if (eRaw.toLowerCase().startsWith(KEY+"summon")) {
+            String[] param = extractFlags(eRaw);
+            if (param.length>=14 && param.length%14==0) {
+                String result = "";
+                for (int i =0;i<param.length;i+=14) {
+                    SWEATCharacter temp = new SWEATCharacter(
+                            param[i], //name
+                            param[i+1], //class
+                            (byte) Integer.parseInt(param[i+2]), //lvl
+                            Integer.parseInt(param[i+3]), //exp
+                            (byte) Integer.parseInt(param[i+4]), //s
+                            (byte) Integer.parseInt(param[i+5]), //w
+                            (byte) Integer.parseInt(param[i+6]), //e
+                            (byte) Integer.parseInt(param[i+7]), //a
+                            (byte) Integer.parseInt(param[i+8]), //t
+                            Integer.parseInt(param[i+9]), //uP
+                            param[i+10], //a
+                            (byte) Integer.parseInt(param[i+11]), //aBonus
+                            param[i+12], //w
+                            (byte) Integer.parseInt(param[i+13]));//wDie
+                    boolean alreadyNamedThat = false;
+                    if (-1!=getIndex(temp.getCharName())){
+                        alreadyNamedThat = true;
+                    }
+                    if (!alreadyNamedThat) {
+                        heros.add(temp);
+                        result = result.concat("\n"+temp.getCharName()+" has been summoned!");
+                    } else {
+                        result = result.concat("\nSome hero already has the name "+temp.getCharName()+"!");
+                    }
+                }
+                sendToSame(e,result.substring(1));
+            }
+        }
+        
         //DELETE , those with the names [NAME]
         if (eRaw.toLowerCase().startsWith(KEY+"delete")){
             String[] param = extractFlags(eRaw);
             for (String p : param) {
-                Predicate<SWEATCharacter> predicate = (SWEATCharacter ch) -> ch.getCharName().equals(p);
+                Predicate<SWEATCharacter> predicate = (SWEATCharacter ch) -> ch.getCharName().equalsIgnoreCase(p);
                 heros.removeIf(predicate);
             }
         }
@@ -269,7 +344,6 @@ public class SWEATListener extends ListenerAdapter{
             sendToSame(e,results.substring(1));
         }
         
-        
         //CHECK , [NAME][STAT]
         if (eRaw.toLowerCase().startsWith(KEY+"check")) {
             String[] param = extractFlags(eRaw);
@@ -333,6 +407,49 @@ public class SWEATListener extends ListenerAdapter{
             }
         }
         
+        //CHANGE HP , [NAME][HPCHANGE]
+        if (eRaw.toLowerCase().startsWith(KEY+"change hp")) {
+            String[] param = extractFlags(eRaw);
+            if (param.length>=2 && param.length%2==0) {
+                String result = "";
+                for (int i=0;i<param.length;i+=2) {
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).changeHP(Integer.parseInt(param[i+1])));
+                    }
+                }
+                sendToSame(e,result.substring(1));
+            }
+        }
+        
+        //FULL HEAL , [NAME]
+        if (eRaw.toLowerCase().startsWith(KEY+"full heal")) {
+            String[] param = extractFlags(eRaw);
+            String result = "";
+            for (String p : param) {
+                int index = getIndex(p);
+                if (-1!=index) {
+                    result = result.concat("\n"+heros.get(index).fullHeal());
+                }
+            }
+            sendToSame(e,result.substring(1));
+        }
+        
+        //ADD EXP , [NAME][EXP]
+        if (eRaw.toLowerCase().startsWith(KEY+"add exp")) {
+            String[] param = extractFlags(eRaw);
+            if (param.length>=2 && param.length%2==0) {
+                String result = "";
+                for (int i=0;i<param.length;i+=2) {
+                    int index = getIndex(param[i]);
+                    if (-1!=index) {
+                        result = result.concat("\n"+heros.get(index).addExp(Integer.parseInt(param[i+1])));
+                    }
+                }
+                sendToSame(e,result.substring(1));
+            }
+        }
+        
         //======================================================================I/O BASED
         
         if (eRaw.equalsIgnoreCase(KEY+"wipe")) {
@@ -346,7 +463,8 @@ public class SWEATListener extends ListenerAdapter{
         //======================================================================TESTING
         
         //sendToSame(e,Arrays.toString(extractFlags(eRaw)));
-        
+        //sendToSame(e, e.getAuthor().getAvatarId());
+        //sendToSame(e, e.getAuthor().getAvatarUrl());
     }
     
     public int getIndex(String name) {

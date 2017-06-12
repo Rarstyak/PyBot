@@ -116,7 +116,7 @@ public final class SWEATCharacter implements Serializable{
         int posMod = ((sMod>0) ? sMod : 0) + ((wMod>0) ? wMod : 0) + ((eMod>0) ? eMod : 0) + ((aMod>0) ? aMod : 0) + ((tMod>0) ? tMod : 0);
         int negMod = ((sMod<0) ? sMod : 0) + ((wMod<0) ? wMod : 0) + ((eMod<0) ? eMod : 0) + ((aMod<0) ? aMod : 0) + ((tMod<0) ? tMod : 0);
         
-        if (level>0 && posMod<=unassignedPoints && negMod==0){
+        if (level>0 && posMod<=unassignedPoints && negMod==0 && (sStat+sMod<111&&wStat+wMod<111&&eStat+eMod<111&&aStat+aMod<111&&tStat+tMod<111)){
         this.sStat += sMod;
         this.wStat += wMod;
         this.eStat += eMod;
@@ -159,7 +159,7 @@ public final class SWEATCharacter implements Serializable{
     }
     
     public String setArmor(String armorName, byte armorBonus) {
-        String result = charName+" had a "+this.armorName+" with "+this.armorBonus+" armor, and has switched to a(n) ";
+        String result = charName+" had a(n) "+this.armorName+" with "+this.armorBonus+" armor, and has switched to a(n) ";
         this.armorName = armorName;
         this.armorBonus = armorBonus;
         return result.concat(this.armorName+" with "+this.armorBonus+" armor!");
@@ -174,7 +174,7 @@ public final class SWEATCharacter implements Serializable{
     }
     
     public String setWeapon(String weaponName, byte weaponDie) {
-        String result = charName+" had a "+this.weaponName+" with "+this.weaponDie+" rolls of attack, and has switched to a(n) ";
+        String result = charName+" had a(n) "+this.weaponName+" with "+this.weaponDie+" rolls of attack, and has switched to a(n) ";
         this.weaponName = weaponName;
         this.weaponDie = weaponDie;
         return result.concat(this.weaponName+" with "+this.weaponDie+" rolls of attack!");
@@ -209,11 +209,11 @@ public final class SWEATCharacter implements Serializable{
         return result;
     }
     
-    public int expForNextLevel() {
-        return 1000*2^(level-1);
+    public double expForNextLevel() {
+        return 1000*Math.pow(2, level-1);
     }
     
-    public int expToNextLevel() {
+    public double expToNextLevel() {
         return expForNextLevel()-exp;
     }
     
@@ -225,7 +225,7 @@ public final class SWEATCharacter implements Serializable{
         if (level==0){
             return "Please Set Your Character Traits";
         } else if (canLevelUp()) {
-            exp -= 1000*2^(level-1);
+            exp -= expForNextLevel();
             level += 1;
             byte roll1 = d10();
             byte roll2 = d10();
@@ -251,17 +251,19 @@ public final class SWEATCharacter implements Serializable{
         }
     }
     
-    public void fullHeal() {
+    public String fullHeal() {
         update();
         healthPoints = maxHealthPoints;
+        return getHP();
     }
     
-    public void changeHP(int change) {
+    public String changeHP(int change) {
         healthPoints += change;
-        update();
+        return getHP();
     }
     
     public String getHP() {
+        update();
         String unConscious = (healthPoints<=0)? " UNCONSCIOUS": "";
         return String.format(
                 "%1$s %3$03d / %4$03d HP%2$s"
