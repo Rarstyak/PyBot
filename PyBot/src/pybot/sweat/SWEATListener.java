@@ -541,6 +541,7 @@ public class SWEATListener extends ListenerAdapter{
             heros = (ArrayList<SWEATCharacter>)in.readObject();
             in.close();
         } catch (FileNotFoundException ex) {
+            save();
             Logger.getLogger(SWEATListener.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

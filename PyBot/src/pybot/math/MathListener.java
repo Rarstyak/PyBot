@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -36,7 +37,6 @@ public class MathListener extends ListenerAdapter{
         }
         ready = true;
     }
-    
     
     /*
     onMessageReceived override
@@ -71,6 +71,25 @@ public class MathListener extends ListenerAdapter{
                 }
             sendToSame(e,result.substring(1));
             }
+        }
+        
+        //DELETE , those with the names [NAME]
+        if (eRaw.toLowerCase().startsWith(KEY+"delete")){
+            String[] param = extractFlags(eRaw);
+            for (String p : param) {
+                Predicate<SetOfDoubles> predicate = (SetOfDoubles s) -> s.getSetName().equalsIgnoreCase(p);
+                sets.removeIf(predicate);
+            }
+        }
+        
+        //======================================================================I/O BASED
+        
+        if (eRaw.equalsIgnoreCase(KEY+"wipe")) {
+            sets.clear();
+        }
+        
+        if (eRaw.equalsIgnoreCase(KEY+"save")) {
+            save();
         }
         
     }
@@ -151,6 +170,7 @@ public class MathListener extends ListenerAdapter{
             sets = (ArrayList<SetOfDoubles>)in.readObject();
             in.close();
         } catch (FileNotFoundException ex) {
+            save();
             Logger.getLogger(MathListener.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
